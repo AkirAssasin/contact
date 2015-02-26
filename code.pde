@@ -13,12 +13,12 @@ int gameState = 0;
 int played = 0;
 int scoreOffset = 0;
 
-int keyA = 80;
-int keyB = 240;
-int keyC = 400;
-int keyD = 560;
-int keyE = 720;
+int bossX = 0;
+int bossY = 0;
+int bossHealth = 0;
 
+int pX = 0;
+int pY = 0;
 
 int keyDelay = 0;
 
@@ -40,6 +40,8 @@ Number.prototype.between = function (min, max) {
 }; 
 
 void draw() {
+    pX = mouseX;
+    pY = mouseY;
     stroke(0, 15);
     fill(0, 15);
     rect(0, 0, width, height);
@@ -47,7 +49,6 @@ void draw() {
     for (int i=dots.size()-1; i>=0; i--) {
              Particle d = (Dot) dots.get(i);
              d.update();
-             d.draw();
     }
     
     if (gameState == 0) {
@@ -103,10 +104,6 @@ void draw() {
         line(480,mouseY,480,pmouseY);
         strokeWeight(1);
         rect(470,mouseY - 50,20,100);
-        for (int i=dots.size()-1; i>=0; i--) {
-             Particle d = (Dot) dots.get(i);
-             if (d.y > 980) {dots.remove(i);}
-        }
     };
 };
 
@@ -122,11 +119,7 @@ void mouseClicked() {
 
 void keyPressed() {
     if (key == 'D') {isDebug = 1;}
-    if (key == 'a') {dots.add(new Dot(keyA));}
-    if (key == 's') {dots.add(new Dot(keyB));}
-    if (key == 'd') {dots.add(new Dot(keyC));}
-    if (key == 'f') {dots.add(new Dot(keyD));}
-    if (key == ' ') {dots.add(new Dot(keyE));}
+    if (key == 's') {dots.add(new Dot(0));}
 };
 
 class Dot {
@@ -134,20 +127,26 @@ class Dot {
     float y = 0.0;
     float vx = 0.0;
     float vy = 0.0;
+    float rotation = 0;
+    float type = 0;
     
     Dot(h) {
-        x = 0;
-        y = h;
-    };
-    void draw () {
-        fill(255);
-        stroke(255);
-        
-        rect(this.x - diameter/2, this.y - diameter/2, diameter, diameter);
+        x = width/2;
+        y = height/2;
+        vx = mouseX;
+        vy = mouseY;
+        type = h;
+        rotation = atan2(vy - y, vx - x) / PI * 180;
     };
     
     void update(){
-      if (this.x > 470 && this.x < 490 && this.y > (mouseY - 50) && this.y < (mouseY + 50)) {score += 1;}
-      this.x += 2;
+        x += cos(rotation/180*PI)*speed;
+        y += sin(rotation/180*PI)*speed;
+        fill(255);
+        translate(x+5, y+5);  
+        rotate(rotation/180*PI);  
+        rect(-5, -5, 10, 10); 
+        rotate(0-rotation/180*PI); 
+        translate(-(x+5), -(y+5)); 
     }
 }

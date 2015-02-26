@@ -3,9 +3,11 @@
     <head>
         <title>Contact</title>
     </head>
-<script src="processing.js"></script>
-<script src="howler.min.js"></script>
-<div align="center"><canvas data-processing-sources="code.pde"></canvas></div>
-<body bgcolor="#2E2E2E"></body>
+<script src="chance.min.js"></script>
+<body>
+<script>
+document.write("01" + chance.integer({min: 2, max: 9}) + "-" + chance.string({length: 7, pool: '0123456789'}));
+</script>
+</body>
 
 </html>
